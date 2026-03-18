@@ -1,0 +1,76 @@
+ 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🎮 لعبة صيد الرقم ٤</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f9ff;
+      text-align: center;
+    }
+    header {
+      background: #0b6fa4;
+      color: white;
+      padding: ١٥px;
+    }
+    .game-box {
+      background: white;
+      margin: ٢٠px auto;
+      padding: ٢٠px;
+      width: ٨٠%;
+      max-width: ٥٠٠px;
+      border-radius: ١٥px;
+      box-shadow: 0 0 ١٠px #ccc;
+    }
+    .items {
+      font-size: ٤٠px;
+      margin: ٢٠px;
+    }
+    button {
+      font-size: ٢٤px;
+      margin: ١٠px;
+      padding: ١٠px ٢٠px;
+    }
+    #result {
+      font-size: ٢٦px;
+      margin-top: ١٥px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎮 لعبة صيد الرقم ٤</h1>
+  <h2>مدرسة عاطوف المختلطة</h2>
+  <p>المعلم: محمد وجيه</p>
+</header>
+
+<div class="game-box">
+  <p>كم عدد البرتقالات؟</p>
+  <div class="items">🍊🍊🍊🍊</div>
+
+  <button onclick="check(3)">٣</button>
+  <button onclick="check(4)">٤</button>
+  <button onclick="check(5)">٥</button>
+
+  <p id="result"></p>
+</div>
+
+<script>
+function check(n) {
+  const r = document.getElementById("result");
+  if (n === 4) {
+    r.textContent = "✅ أحسنت! العدد هو ٤";
+    r.style.color = "green";
+  } else {
+    r.textContent = "❌ حاول مرة أخرى";
+    r.style.color = "red";
+  }
+}
+</script>
+
+</body>
+</html>
+ 
