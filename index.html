@@ -7,7 +7,7 @@
 
 <style>
 body{
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   background:#eef7fb;
   text-align:center;
 }
@@ -29,28 +29,31 @@ header{
   margin:15px;
 }
 button{
-  font-size:20px;
-  padding:10px 18px;
+  font-size:22px;
+  padding:10px 20px;
   margin:5px;
 }
 #result{
-  font-size:22px;
-  margin-top:10px;
+  font-size:24px;
+  margin-top:15px;
 }
 #score{
   color:#ff9800;
-  font-size:18px;
+  font-size:20px;
 }
 .stage{
-  font-size:16px;
+  font-size:18px;
   color:#555;
+  margin-bottom:10px;
 }
 canvas{
   border:2px dashed #0b6fa4;
   border-radius:10px;
   touch-action:none;
 }
-.hidden{display:none;}
+.hidden{
+  display:none;
+}
 </style>
 </head>
 
@@ -78,20 +81,36 @@ canvas{
 
 <p id="result"></p>
 <p id="score">⭐ النقاط: ٠</p>
+
 <button id="nextBtn" class="hidden" onclick="next()">التالي ▶</button>
 </div>
 
 <script>
+/* 🔢 تحويل الأرقام إلى عربية شرقية */
+function toArabicNumber(num){
+  const a = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+  return num.toString().split('').map(d => a[d]).join('');
+}
+
+/* مراحل الدرس (مراعية للأعداد السابقة) */
 const stages=[
- {t:"المرحلة ١ / ٥ – مراجعة",q:"كم عدد التفاحات؟",i:"🍎🍎🍎",o:[1,2,3],a:3},
- {t:"المرحلة ٢ / ٥ – عدّ",q:"كم عدد الكرات؟",i:"⚽⚽⚽⚽",o:[3,4,5],a:4},
- {t:"المرحلة ٣ / ٥ – ميّز",q:"اضغط على العدد ٤",i:"٤️⃣",o:[2,4,3],a:4},
- {t:"المرحلة ٤ / ٥ – اربط",q:"كم عدد العصافير؟",i:"🐦🐦🐦🐦",o:[3,4,5],a:4},
- {t:"المرحلة ٥ / ٥ – اكتب ٤"}
+ {t:"المرحلة "+toArabicNumber(1)+" / "+toArabicNumber(5)+" – مراجعة",
+  q:"كم عدد التفاحات؟", i:"🍎🍎🍎", o:[1,2,3], a:3},
+
+ {t:"المرحلة "+toArabicNumber(2)+" / "+toArabicNumber(5)+" – عدّ",
+  q:"كم عدد الكرات؟", i:"⚽⚽⚽⚽", o:[3,4,5], a:4},
+
+ {t:"المرحلة "+toArabicNumber(3)+" / "+toArabicNumber(5)+" – ميّز العدد",
+  q:"اضغط على العدد ٤", i:"٤️⃣", o:[2,4,3], a:4},
+
+ {t:"المرحلة "+toArabicNumber(4)+" / "+toArabicNumber(5)+" – ربط العدد بالكمية",
+  q:"كم عدد العصافير؟", i:"🐦🐦🐦🐦", o:[3,4,5], a:4},
+
+ {t:"المرحلة "+toArabicNumber(5)+" / "+toArabicNumber(5)+" – كتابة العدد ٤"}
 ];
 
 const praise=["🌟 أحسنت","👏 ممتاز","🎉 رائع","✅ بطل"];
-let n=0,score=0;
+let n=0, score=0;
 
 function load(){
  const s=stages[n];
@@ -104,10 +123,11 @@ function load(){
  if(s.q){
   document.getElementById("question").innerText=s.q;
   document.getElementById("items").innerText=s.i;
-  s.o.forEach(x=>{
+
+  s.o.forEach(o=>{
     const b=document.createElement("button");
-    b.innerText=x;
-    b.onclick=()=>answer(x);
+    b.innerText=toArabicNumber(o);   // ✅ عرض عربي
+    b.onclick=()=>answer(o);         // ✅ منطق رقمي
     document.getElementById("choices").appendChild(b);
   });
  }else{
@@ -119,40 +139,65 @@ function load(){
 
 function answer(x){
  if(x===stages[n].a){
-  document.getElementById("result").innerText=
+  document.getElementById("result").innerText =
     praise[Math.floor(Math.random()*praise.length)];
   score++;
-  document.getElementById("score").innerText="⭐ النقاط: "+score;
+  document.getElementById("score").innerText =
+    "⭐ النقاط: "+toArabicNumber(score);
   document.getElementById("nextBtn").classList.remove("hidden");
  }else{
   document.getElementById("result").innerText="❌ حاول مرة أخرى";
  }
 }
 
-function next(){ n++; load(); }
-
-function finishWriting(){
- document.getElementById("result").innerText="🎊 أحسنت! كتبت الرقم ٤";
+function next(){
+ n++;
+ if(n<stages.length){
+  load();
+ }else{
+  document.getElementById("question").innerText="🎊 أحسنت! أنهيت درس العدد ٤";
+  document.getElementById("items").innerText="";
+  document.getElementById("choices").innerHTML="";
+  document.getElementById("nextBtn").classList.add("hidden");
+ }
 }
 
 load();
 
-/* الرسم بالإصبع */
+/* ✍️ الرسم بالإصبع */
 const canvas=document.getElementById("board");
 const ctx=canvas.getContext("2d");
-ctx.lineWidth=6; ctx.lineCap="round";
+ctx.lineWidth=6;
+ctx.lineCap="round";
 let drawing=false;
 
 function pos(e){
  const r=canvas.getBoundingClientRect();
- return {x:(e.touches?e.touches[0].clientX:e.clientX)-r.left,
-         y:(e.touches?e.touches[0].clientY:e.clientY)-r.top};
+ return {
+  x:(e.touches?e.touches[0].clientX:e.clientX)-r.left,
+  y:(e.touches?e.touches[0].clientY:e.clientY)-r.top
+ };
 }
-canvas.onmousedown=canvas.ontouchstart=e=>{drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y);}
-canvas.onmousemove=canvas.ontouchmove=e=>{if(!drawing)return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke();}
+canvas.onmousedown=canvas.ontouchstart=e=>{
+ drawing=true;
+ const p=pos(e);
+ ctx.beginPath();
+ ctx.moveTo(p.x,p.y);
+};
+canvas.onmousemove=canvas.ontouchmove=e=>{
+ if(!drawing)return;
+ const p=pos(e);
+ ctx.lineTo(p.x,p.y);
+ ctx.stroke();
+};
 canvas.onmouseup=canvas.ontouchend=()=>drawing=false;
 
-function clearCanvas(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
+function clearCanvas(){
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+function finishWriting(){
+ document.getElementById("result").innerText="✅ أحسنت! كتبت الرقم ٤";
+}
 </script>
 
 </body>
