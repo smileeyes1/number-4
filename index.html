@@ -19,7 +19,7 @@ header{
 .game{
   background:white;
   width:90%;
-  max-width:500px;
+  max-width:520px;
   margin:20px auto;
   padding:20px;
   border-radius:15px;
@@ -29,21 +29,28 @@ header{
   margin:15px;
 }
 button{
-  font-size:22px;
-  padding:10px 20px;
+  font-size:20px;
+  padding:10px 18px;
   margin:5px;
 }
 #result{
-  font-size:24px;
-  margin-top:15px;
+  font-size:22px;
+  margin-top:10px;
 }
 #score{
   color:#ff9800;
-  font-size:20px;
+  font-size:18px;
 }
-.hidden{
-  display:none;
+.stage{
+  font-size:16px;
+  color:#555;
 }
+canvas{
+  border:2px dashed #0b6fa4;
+  border-radius:10px;
+  touch-action:none;
+}
+.hidden{display:none;}
 </style>
 </head>
 
@@ -56,72 +63,97 @@ button{
 </header>
 
 <div class="game">
+<p class="stage" id="stage"></p>
 <p id="question"></p>
 <div id="items" class="items"></div>
 
-<div id="choices">
-<button onclick="answer(3)">٣</button>
-<button onclick="answer(4)">٤</button>
-<button onclick="answer(5)">٥</button>
+<div id="choices"></div>
+
+<div id="writeStage" class="hidden">
+  <p>✍️ اكتب الرقم ٤ بإصبعك</p>
+  <canvas id="board" width="260" height="260"></canvas><br>
+  <button onclick="clearCanvas()">↺ مسح</button>
+  <button onclick="finishWriting()">✅ أنهيت</button>
 </div>
 
 <p id="result"></p>
 <p id="score">⭐ النقاط: ٠</p>
-
 <button id="nextBtn" class="hidden" onclick="next()">التالي ▶</button>
 </div>
 
 <script>
-const questions=[
- {q:"كم عدد البرتقالات؟",i:"🍊🍊🍊🍊"},
- {q:"كم عدد العصافير؟",i:"🐦🐦🐦🐦"},
- {q:"كم عدد الدجاجات؟",i:"🐔🐔🐔🐔"}
+const stages=[
+ {t:"المرحلة ١ / ٥ – مراجعة",q:"كم عدد التفاحات؟",i:"🍎🍎🍎",o:[1,2,3],a:3},
+ {t:"المرحلة ٢ / ٥ – عدّ",q:"كم عدد الكرات؟",i:"⚽⚽⚽⚽",o:[3,4,5],a:4},
+ {t:"المرحلة ٣ / ٥ – ميّز",q:"اضغط على العدد ٤",i:"٤️⃣",o:[2,4,3],a:4},
+ {t:"المرحلة ٤ / ٥ – اربط",q:"كم عدد العصافير؟",i:"🐦🐦🐦🐦",o:[3,4,5],a:4},
+ {t:"المرحلة ٥ / ٥ – اكتب ٤"}
 ];
 
-const praise=[
- "🌟 أحسنت!",
- "👏 ممتاز!",
- "✅ رائع!",
- "🎉 بطل!"
-];
-
+const praise=["🌟 أحسنت","👏 ممتاز","🎉 رائع","✅ بطل"];
 let n=0,score=0;
 
 function load(){
- document.getElementById("question").innerText=questions[n].q;
- document.getElementById("items").innerText=questions[n].i;
+ const s=stages[n];
+ document.getElementById("stage").innerText=s.t;
  document.getElementById("result").innerText="";
  document.getElementById("nextBtn").classList.add("hidden");
- enableButtons(true);
+ document.getElementById("writeStage").classList.add("hidden");
+ document.getElementById("choices").innerHTML="";
+
+ if(s.q){
+  document.getElementById("question").innerText=s.q;
+  document.getElementById("items").innerText=s.i;
+  s.o.forEach(x=>{
+    const b=document.createElement("button");
+    b.innerText=x;
+    b.onclick=()=>answer(x);
+    document.getElementById("choices").appendChild(b);
+  });
+ }else{
+  document.getElementById("question").innerText="";
+  document.getElementById("items").innerText="٤";
+  document.getElementById("writeStage").classList.remove("hidden");
+ }
 }
 
 function answer(x){
- enableButtons(false);
- if(x===4){
-  const msg=praise[Math.floor(Math.random()*praise.length)];
-  document.getElementById("result").innerText=msg;
+ if(x===stages[n].a){
+  document.getElementById("result").innerText=
+    praise[Math.floor(Math.random()*praise.length)];
   score++;
   document.getElementById("score").innerText="⭐ النقاط: "+score;
   document.getElementById("nextBtn").classList.remove("hidden");
  }else{
   document.getElementById("result").innerText="❌ حاول مرة أخرى";
-  enableButtons(true);
  }
 }
 
-function next(){
- n=(n+1)%questions.length;
- load();
-}
+function next(){ n++; load(); }
 
-function enableButtons(state){
- document.querySelectorAll("#choices button")
-   .forEach(b=>b.disabled=!state);
+function finishWriting(){
+ document.getElementById("result").innerText="🎊 أحسنت! كتبت الرقم ٤";
 }
 
 load();
+
+/* الرسم بالإصبع */
+const canvas=document.getElementById("board");
+const ctx=canvas.getContext("2d");
+ctx.lineWidth=6; ctx.lineCap="round";
+let drawing=false;
+
+function pos(e){
+ const r=canvas.getBoundingClientRect();
+ return {x:(e.touches?e.touches[0].clientX:e.clientX)-r.left,
+         y:(e.touches?e.touches[0].clientY:e.clientY)-r.top};
+}
+canvas.onmousedown=canvas.ontouchstart=e=>{drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y);}
+canvas.onmousemove=canvas.ontouchmove=e=>{if(!drawing)return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke();}
+canvas.onmouseup=canvas.ontouchend=()=>drawing=false;
+
+function clearCanvas(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
 </script>
 
 </body>
 </html>
- 
