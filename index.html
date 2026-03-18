@@ -1,74 +1,125 @@
- 
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>🎮 لعبة صيد الرقم ٤</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f9ff;
-      text-align: center;
-    }
-    header {
-      background: #0b6fa4;
-      color: white;
-      padding: ١٥px;
-    }
-    .game-box {
-      background: white;
-      margin: ٢٠px auto;
-      padding: ٢٠px;
-      width: ٨٠%;
-      max-width: ٥٠٠px;
-      border-radius: ١٥px;
-      box-shadow: 0 0 ١٠px #ccc;
-    }
-    .items {
-      font-size: ٤٠px;
-      margin: ٢٠px;
-    }
-    button {
-      font-size: ٢٤px;
-      margin: ١٠px;
-      padding: ١٠px ٢٠px;
-    }
-    #result {
-      font-size: ٢٦px;
-      margin-top: ١٥px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>🎮 لعبة صيد الرقم ٤</title>
+
+<style>
+body{
+  font-family: Arial;
+  background:#eef7fb;
+  text-align:center;
+}
+header{
+  background:#0b6fa4;
+  color:white;
+  padding:15px;
+}
+.game{
+  background:white;
+  width:90%;
+  max-width:500px;
+  margin:20px auto;
+  padding:20px;
+  border-radius:15px;
+}
+.items{
+  font-size:40px;
+  margin:15px;
+}
+button{
+  font-size:22px;
+  padding:10px 20px;
+  margin:5px;
+}
+#result{
+  font-size:24px;
+  margin-top:15px;
+}
+#score{
+  color:#ff9800;
+  font-size:20px;
+}
+.hidden{
+  display:none;
+}
+</style>
 </head>
+
 <body>
 
 <header>
-  <h1>🎮 لعبة صيد الرقم ٤</h1>
-  <h2>مدرسة عاطوف المختلطة</h2>
-  <p>المعلم: محمد وجيه</p>
+<h1>🎮 لعبة صيد الرقم ٤</h1>
+<h3>مدرسة عاطوف المختلطة</h3>
+<p>المعلم: محمد وجيه</p>
 </header>
 
-<div class="game-box">
-  <p>كم عدد البرتقالات؟</p>
-  <div class="items">🍊🍊🍊🍊</div>
+<div class="game">
+<p id="question"></p>
+<div id="items" class="items"></div>
 
-  <button onclick="check(3)">٣</button>
-  <button onclick="check(4)">٤</button>
-  <button onclick="check(5)">٥</button>
+<div id="choices">
+<button onclick="answer(3)">٣</button>
+<button onclick="answer(4)">٤</button>
+<button onclick="answer(5)">٥</button>
+</div>
 
-  <p id="result"></p>
+<p id="result"></p>
+<p id="score">⭐ النقاط: ٠</p>
+
+<button id="nextBtn" class="hidden" onclick="next()">التالي ▶</button>
 </div>
 
 <script>
-function check(n) {
-  const r = document.getElementById("result");
-  if (n === 4) {
-    r.textContent = "✅ أحسنت! العدد هو ٤";
-    r.style.color = "green";
-  } else {
-    r.textContent = "❌ حاول مرة أخرى";
-    r.style.color = "red";
-  }
+const questions=[
+ {q:"كم عدد البرتقالات؟",i:"🍊🍊🍊🍊"},
+ {q:"كم عدد العصافير؟",i:"🐦🐦🐦🐦"},
+ {q:"كم عدد الدجاجات؟",i:"🐔🐔🐔🐔"}
+];
+
+const praise=[
+ "🌟 أحسنت!",
+ "👏 ممتاز!",
+ "✅ رائع!",
+ "🎉 بطل!"
+];
+
+let n=0,score=0;
+
+function load(){
+ document.getElementById("question").innerText=questions[n].q;
+ document.getElementById("items").innerText=questions[n].i;
+ document.getElementById("result").innerText="";
+ document.getElementById("nextBtn").classList.add("hidden");
+ enableButtons(true);
 }
+
+function answer(x){
+ enableButtons(false);
+ if(x===4){
+  const msg=praise[Math.floor(Math.random()*praise.length)];
+  document.getElementById("result").innerText=msg;
+  score++;
+  document.getElementById("score").innerText="⭐ النقاط: "+score;
+  document.getElementById("nextBtn").classList.remove("hidden");
+ }else{
+  document.getElementById("result").innerText="❌ حاول مرة أخرى";
+  enableButtons(true);
+ }
+}
+
+function next(){
+ n=(n+1)%questions.length;
+ load();
+}
+
+function enableButtons(state){
+ document.querySelectorAll("#choices button")
+   .forEach(b=>b.disabled=!state);
+}
+
+load();
 </script>
 
 </body>
