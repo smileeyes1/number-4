@@ -2,379 +2,377 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>مغامرة الضرب في أربعة</title>
+<title>مغامرة البطل – جدول ٤</title>
+
 <style>
-body {font-family: Arial, sans-serif; background: linear-gradient(#87ceeb, #e0ffff); margin: 0; padding: 20px; color: #000000; text-align: center; font-size: 22px;}
-h1 {color: #000000; font-size: 50px;}
-h2 {color: #000000; font-size: 35px;}
-p.author {font-size: 24px; margin: 10px 0;}
-.door {background: #ffdd55; border: 5px solid #ff8000; border-radius: 20px; padding: 25px; margin: 15px; font-size: 28px; cursor: pointer; display: inline-block; width: 300px; color: #000000;}
-.door:hover {transform: scale(1.1); background: #ffd700;}
-.level {display: none; background: white; border-radius: 20px; padding: 40px; margin: 20px auto; max-width: 900px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: #000000;}
-button {background: #32cd32; color: #000000; border: none; padding: 20px 40px; font-size: 26px; border-radius: 15px; margin: 15px; cursor: pointer;}
-.circle {width: 60px; height: 60px; background: red; border-radius: 50%; display: inline-block; margin: 10px; animation: fly 1.5s forwards;}
-@keyframes fly {0% {transform: translateY(0) scale(0.5);} 50% {transform: translateY(-80px) scale(1.2);} 100% {transform: translateY(-150px) scale(0.8); opacity: 0;}}
-.star {font-size: 55px; color: gold; animation: twinkle 0.8s infinite;}
-@keyframes twinkle {0%,100% {opacity: 1;} 50% {opacity: 0.3;}}
-#score {font-size: 32px; color: #000000; margin: 20px;}
-#progress {height: 25px; background: #32cd32; width: 0%; border-radius: 10px; transition: width 1s;}
-.confetti {position: absolute; width: 12px; height: 12px; border-radius: 50%; animation: confettiFall 3s linear forwards;}
-@keyframes confettiFall {0% {transform: translateY(-100px) rotate(0deg);} 100% {transform: translateY(800px) rotate(720deg); opacity: 0;}}
-button.selected {background: #90ee90 !important;}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(#0a1a2f, #112d4e);
+  color: #fff;
+  text-align: center;
+}
+
+/* إطار اللعبة */
+#game-container {
+  width: 480px;
+  margin: 30px auto;
+  padding: 25px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 25px #00eaff;
+}
+
+/* شاشة البداية */
+#start-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(#062241, #0a1a2f);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#start-screen h1 {
+  font-size: 55px;
+  margin-bottom: 30px;
+  text-shadow: 0 0 20px #00eaff;
+}
+
+#start-btn {
+  padding: 18px 45px;
+  font-size: 30px;
+  border: none;
+  border-radius: 15px;
+  background: #00eaff;
+  color: #000;
+  cursor: pointer;
+}
+
+/* ====== البطل ====== */
+#hero {
+  width: 160px;
+  height: 230px;
+  margin: 20px auto;
+  position: relative;
+  animation: hero-float 2.2s infinite;
+}
+
+#hero .head {
+  width: 75px;
+  height: 75px;
+  background: #ffddb0;
+  border-radius: 50%;
+  margin: auto;
+  border: 5px solid #c79a53;
+}
+
+#hero .helmet {
+  width: 90px;
+  height: 55px;
+  background: #444;
+  border-radius: 50% 50% 20% 20%;
+  position: absolute;
+  top: -10px;
+  left: 35px;
+  border: 4px solid #222;
+}
+
+#hero .helmet::after {
+  content: "";
+  width: 22px;
+  height: 45px;
+  background: red;
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 10px;
+}
+
+#hero .body {
+  width: 60px;
+  height: 110px;
+  background: #1976ff;
+  margin: auto;
+  margin-top: -5px;
+  border-radius: 12px;
+  border: 5px solid #0a3a74;
+}
+
+#hero .armor {
+  width: 55px;
+  height: 65px;
+  background: #d4d4d4;
+  margin: auto;
+  margin-top: -95px;
+  border-radius: 10px;
+  border: 4px solid #aaa;
+}
+
+#hero .sword {
+  width: 14px;
+  height: 110px;
+  background: silver;
+  position: absolute;
+  right: -30px;
+  top: 60px;
+  border-radius: 7px;
+  border: 2px solid #ccc;
+}
+
+@keyframes hero-float {
+  0% { transform: translateY(0);}
+  50% { transform: translateY(-10px);}
+  100% { transform: translateY(0);}
+}
+
+/* ====== الوحش ====== */
+#monster-box {
+  background: #1f4068;
+  padding: 20px;
+  margin-top: 15px;
+  border-radius: 20px;
+  box-shadow: 0 0 15px #00eaff;
+}
+
+#monster {
+  font-size: 110px;
+  transition: 0.2s;
+}
+
+.monster-hit {
+  animation: monster-shake 0.3s;
+}
+
+@keyframes monster-shake {
+  0% { transform: translateX(0);}
+  25% { transform: translateX(-10px);}
+  50% { transform: translateX(10px);}
+  75% { transform: translateX(-10px);}
+  100% { transform: translateX(0);}
+}
+
+/* شريط الطاقة */
+#monster-hp {
+  width: 90%;
+  height: 25px;
+  background: #333;
+  margin: 10px auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#monster-hp-inner {
+  width: 100%;
+  height: 100%;
+  background: #29ff74;
+  transition: 0.4s;
+}
+
+input {
+  padding: 12px;
+  font-size: 26px;
+  border: none;
+  border-radius: 10px;
+  width: 200px;
+  text-align: center;
+}
+
+button {
+  padding: 15px 35px;
+  font-size: 28px;
+  margin-top: 15px;
+  background: #00eaff;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+/* المدرسة */
+#footer {
+  margin-top: 25px;
+  font-size: 20px;
+  color: #90e0ef;
+}
 </style>
 </head>
+
 <body>
 
-<h1>بسم الله الرحمن الرحيم</h1>
-<h2>مغامرة الضرب في أربعة</h2>
-<p class="author">اعداد محمد وجيه<br>مدرسة عاطوف المختلطة</p>
-
-<div id="score">نقاطك: <span id="points">٠</span></div>
-<div style="width:80%; margin:15px auto; background:#ddd; border-radius:10px;"><div id="progress"></div></div>
-
-<div id="doors">
-<button class="door" onclick="startAdventure(1)">مغامرة الدوائر السحرية</button>
-<button class="door" onclick="startAdventure(2)">قصر جدول الأربعة</button>
-<button class="door" onclick="startAdventure(3)">جسر الضرب والجمع</button>
-<button class="door" onclick="startAdventure(4)">حديقة القصص الحقيقية</button>
-<button class="door" onclick="startAdventure(5)">الكنز النهائي</button>
+<!-- شاشة البداية -->
+<div id="start-screen">
+  <h1>⚔️ مغامرة البطل ⚔️</h1>
+  <button id="start-btn">ابدأ اللعب</button>
 </div>
 
-<div id="adv1" class="level">
-<h3>اضف مجموعات وشاهد الضرب يحدث سحريا</h3>
-<button onclick="addGroup()">اضف مجموعة جديدة</button>
-<button onclick="clearGroups()">امسح وابدأ من جديد</button>
-<div id="visual1"></div>
-<p id="eq1" style="font-size:28px;"></p>
+<div id="game-container">
+
+<!-- البطل -->
+<div id="hero">
+  <div class="head"></div>
+  <div class="helmet"></div>
+  <div class="body"></div>
+  <div class="armor"></div>
+  <div class="sword"></div>
 </div>
 
-<div id="adv2" class="level">
-<h3>قصر جدول الأربعة السحري</h3>
-<p>اضغط على سطر لتختاره ثم اضغط زر السحر</p>
-<table border="1" style="margin:auto; font-size:28px; color:#000000; border-collapse:collapse; width:60%;">
-<tr><td><button onclick="selectRow(1)" id="row1">١ × ٤ = ؟</button></td></tr>
-<tr><td><button onclick="selectRow(2)" id="row2">٢ × ٤ = ؟</button></td></tr>
-<tr><td><button onclick="selectRow(3)" id="row3">٣ × ٤ = ؟</button></td></tr>
-<tr><td><button onclick="selectRow(4)" id="row4">٤ × ٤ = ؟</button></td></tr>
-<tr><td><button onclick="selectRow(5)" id="row5">٥ × ٤ = ؟</button></td></tr>
-</table>
-
-<button onclick="showSelectedMagic()" style="background:#ffd700; color:#000; font-size:26px; padding:15px 30px; margin-top:30px;">اضغط لترى السحر</button>
-
-<div id="magic" style="font-size:26px; color:#000000; margin-top:30px; min-height:200px;"></div>
+<!-- المستوى -->
+<div style="font-size:30px; color:#00eaff;">
+  مستواك: <span id="level">١</span>
 </div>
 
-<div id="adv3" class="level">
-<h3>جسر الضرب والجمع</h3>
-<p>اضغط على أي سطر لترى الضرب يساوي الجمع المتكرر</p>
-
-<table border="1" style="margin:auto; font-size:28px; color:#000000; border-collapse:collapse; width:70%;">
-<tr><td><button onclick="showLink(1)" id="link1">١ × ٤ = ؟</button></td></tr>
-<tr><td><button onclick="showLink(2)" id="link2">٢ × ٤ = ؟</button></td></tr>
-<tr><td><button onclick="showLink(3)" id="link3">٣ × ٤ = ؟</button></td></tr>
-<tr><td><button onclick="showLink(4)" id="link4">٤ × ٤ = ؟</button></td></tr>
-<tr><td><button onclick="showLink(5)" id="link5">٥ × ٤ = ؟</button></td></tr>
-</table>
-
-<div id="linkResult" style="font-size:26px; margin-top:40px; min-height:200px; color:#000;"></div>
+<!-- النقاط -->
+<div style="font-size:26px; margin-top:10px; color:#00eaff;">
+  نقاطك: <span id="score">٠</span>
 </div>
 
-<div id="adv4" class="level">
-<h3>حديقة القصص الحقيقية</h3>
-
-<div style="margin:30px 0;">
-<div style="font-size:50px; margin-bottom:15px;">🪟 🪟 🪟 🪟</div>
-<p style="font-size:26px;">نوافذ الصف</p>
-<p style="font-size:24px; color:#006400;">عدد النوافذ ٤</p>
-<button onclick="solveStory(1)" style="background:#ff69b4;">احسب × ٤</button>
+<!-- الوحش -->
+<div id="monster-box">
+  <div id="monster">👹</div>
+  <div id="monster-hp"><div id="monster-hp-inner"></div></div>
+  <div style="font-size: 22px;">
+    طاقة الوحش: <span id="hp">١٠٠</span>%
+  </div>
 </div>
 
-<div style="margin:40px 0;">
-<div style="font-size:50px; margin-bottom:15px;">📖 📖 📖 📖</div>
-<p style="font-size:26px;">قصص التاجر</p>
-<p style="font-size:24px; color:#006400;">عدد القصص ٤ وسعر الواحدة ٤ دنانير</p>
-<button onclick="solveStory(2)" style="background:#ff69b4;">احسب المبلغ</button>
+<!-- السؤال -->
+<div id="question" style="font-size:32px; margin-top:20px;">
+  كم يساوي ٤ × ١ ؟
 </div>
 
-<div style="margin:40px 0;">
-<div style="font-size:50px; margin-bottom:15px;">🌀 🌀 🌀</div>
-<p style="font-size:26px;">اذرع المراوح</p>
-<p style="font-size:24px; color:#006400;">عدد المراوح ٣ وكل مروحة ٤ أذرع</p>
-<button onclick="solveStory(3)" style="background:#ff69b4;">احسب الكلي</button>
+<input type="number" id="answer" placeholder="اكتب الجواب">
+<br>
+<button onclick="attack()">هجوم ⚡</button>
+
 </div>
 
-<div id="storyResult" style="font-size:28px; margin-top:40px; min-height:250px; color:#000; border-top:2px solid #ddd; padding-top:20px;"></div>
-</div>
-
-<div id="adv5" class="level">
-<h3>الكنز النهائي - ١٠ تحديات</h3>
-<p id="finalQ" style="font-size:28px;"></p>
-<input id="finalAns" type="number" placeholder="اكتب الجواب" style="font-size:26px; padding:10px;">
-<button onclick="checkFinal()">تحقق</button>
-<p id="finalFb" style="font-size:26px;"></p>
-<div id="stars"></div>
-</div>
-
-<div id="certificate" class="level" style="display:none; background:gold; color:#000000;">
-<h3>مبروك يا بطل</h3>
-<p style="font-size:28px;">لقد تعلمت الضرب في أربعة بنجاح</p>
-<button onclick="printCertificate()">اطبع الشهادة</button>
+<!-- المدرسة -->
+<div id="footer">
+  👨‍🏫 المعلم: محمد وجيه — 🏫 مدرسة عاطوف المختلطة
 </div>
 
 <script>
-let points = 0;
-let progress = 0;
-let groups = 0;
-let selectedRow = 0;
-let correctFinal = 0;
-let finalCount = 0;
+/* شاشة البداية */
+document.getElementById("start-btn").onclick = function() {
+  document.getElementById("start-screen").style.display = "none";
+  newQuestion();
+  updateMonster();
+};
 
-const praises = [
-"برافو يا بطل",
-"احسنت يا اسطورة",
-"ممتاز يا نجم",
-"يا بطل الرياضيات",
-"رائع جدا",
-"انت عبقري",
-"مبروك يا بطل",
-"يا وحش الرياضيات",
-"فائق الروعة",
-"تستاهل النجوم"
-];
+/* صوت داخلي */
+function playSound(freq, type="sine") {
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.3);
+  osc.stop(ctx.currentTime + 0.3);
+}
 
+/* النظام */
+let level = 1;
+let score = 0;
+let a = 1;
+
+/* الوحوش */
+const monsters = ["👹","🐲","👾","🦂","🐉","👻","🦁","🐺"];
+let currentMonster = 0;
+
+/* طاقة الوحش */
+let monsterMaxHP = 100;
+let monsterHP = monsterMaxHP;
+
+function updateMonster() {
+  currentMonster = (level - 1) % monsters.length;
+  document.getElementById("monster").innerHTML = monsters[currentMonster];
+  monsterMaxHP = 100 + (level - 1) * 20;
+  monsterHP = monsterMaxHP;
+  updateHPBar();
+}
+
+/* شريط الطاقة */
+function updateHPBar() {
+  let p = monsterHP / monsterMaxHP * 100;
+  document.getElementById("hp").innerHTML = toArabic(Math.round(p));
+  document.getElementById("monster-hp-inner").style.width = p + "%";
+}
+
+/* تحويل للأرقام العربية */
 function toArabic(n) {
-return n.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+  return n.toString().replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
 }
 
-function updateScore() {
-document.getElementById('points').innerText = toArabic(points);
-progress = Math.min(100, points / 2);
-document.getElementById('progress').style.width = progress + '%';
+/* سؤال جديد — من ١ إلى ١٠ */
+function newQuestion() {
+  a = Math.floor(Math.random() * 10) + 1;
+  document.getElementById("question").innerHTML =
+    "كم يساوي ٤ × " + toArabic(a) + " ؟";
 }
 
-function playSound(type) {
-const ctx = new (window.AudioContext || window.webkitAudioContext)();
-const osc = ctx.createOscillator();
-const gain = ctx.createGain();
-osc.connect(gain);
-gain.connect(ctx.destination);
-if (type === 'correct') {
-osc.frequency.value = 800;
-osc.type = 'sine';
-gain.gain.value = 0.8;
-setTimeout(() => gain.gain.value = 0, 200);
-} else {
-osc.frequency.value = 300;
-osc.type = 'sawtooth';
-gain.gain.value = 0.6;
-setTimeout(() => gain.gain.value = 0, 400);
-}
-osc.start();
-setTimeout(() => osc.stop(), 600);
+/* الهجوم */
+function attack() {
+  let ans = parseInt(document.getElementById("answer").value);
+
+  if (ans === a * 4) successfulHit();
+  else failedHit();
+
+  /* ✅ مسح الإجابة بعد ثانيتين */
+  setTimeout(() => {
+    document.getElementById("answer").value = "";
+  }, 2000);
 }
 
-function createStar() {
-const star = document.createElement('div');
-star.className = 'star';
-star.innerText = '★';
-document.body.appendChild(star);
-setTimeout(() => star.remove(), 3000);
+/* نجاح ✅ */
+function successfulHit() {
+  playSound(500);
+  document.getElementById("monster").classList.add("monster-hit");
+  setTimeout(() => {
+    document.getElementById("monster").classList.remove("monster-hit");
+  }, 300);
+
+  monsterHP -= 20;
+  if (monsterHP < 0) monsterHP = 0;
+
+  updateHPBar();
+  score += 10;
+  updateScore();
+
+  if (monsterHP === 0) winLevel();
+  else newQuestion();
 }
 
-function launchConfetti() {
-for (let i = 0; i < 50; i++) {
-const conf = document.createElement('div');
-conf.className = 'confetti';
-conf.style.left = Math.random() * 100 + 'vw';
-conf.style.background = ['#ff0000','#ffff00','#00ff00','#0000ff'][Math.floor(Math.random()*4)];
-conf.style.animationDuration = (Math.random() * 2 + 2) + 's';
-document.body.appendChild(conf);
-setTimeout(() => conf.remove(), 4000);
-}
-}
-
-function startAdventure(n) {
-document.querySelectorAll('.level').forEach(l => l.style.display = 'none');
-document.getElementById('adv' + n).style.display = 'block';
-if (n === 5) generateFinalQuestion();
-}
-
-function addGroup() {
-groups++;
-const v = document.getElementById('visual1');
-v.innerHTML = '';
-for (let i = 0; i < groups; i++) {
-const g = document.createElement('div');
-for (let j = 0; j < 4; j++) {
-const c = document.createElement('div');
-c.className = 'circle';
-g.appendChild(c);
-}
-v.appendChild(g);
-}
-document.getElementById('eq1').innerText = toArabic(groups) + ' × ٤ = ' + toArabic(groups * 4);
-points += 8;
-updateScore();
-playSound('correct');
-createStar();
-launchConfetti();
-if (groups >= 5) {
-document.getElementById('eq1').innerHTML += ' برافو يا بطل!';
-}
-}
-
-function clearGroups() {
-groups = 0;
-document.getElementById('visual1').innerHTML = '';
-document.getElementById('eq1').innerText = '';
-}
-
-function selectRow(num) {
-for (let i = 1; i <= 5; i++) {
-document.getElementById('row' + i).classList.remove('selected');
-}
-document.getElementById('row' + num).classList.add('selected');
-selectedRow = num;
-document.getElementById('magic').innerHTML = 'اخترت ' + toArabic(num) + ' × ٤ ... اضغط السحر الآن';
-}
-
-function showSelectedMagic() {
-if (selectedRow === 0) {
-document.getElementById('magic').innerHTML = 'اختر سطرا أولا من الجدول';
-return;
-}
-const result = selectedRow * 4;
-const m = document.getElementById('magic');
-m.innerHTML = 'انظر! ' + toArabic(selectedRow) + ' × ٤ = ' + toArabic(result) + '<br>أربع مجموعات تطير الآن';
-
-for (let i = 0; i < ٤; i++) {
-const flying = document.createElement('div');
-flying.className = 'circle';
-flying.style.background = ['#ff4500', '#ffd700', '#00ff7f', '#00bfff'][i];
-flying.style.margin = '15px';
-flying.style.animation = 'fly 1.8s forwards ' + (i * 0.3) + 's';
-m.appendChild(flying);
-}
-
-playSound('correct');
-createStar();
-launchConfetti();
-const randomPraise = praises[Math.floor(Math.random() * praises.length)];
-m.innerHTML += '<br>' + randomPraise;
-points += 10;
-updateScore();
-document.getElementById('row' + selectedRow).innerText = toArabic(selectedRow) + ' × ٤ = ' + toArabic(result);
-}
-
-function showLink(num) {
-  const res = document.getElementById('linkResult');
-  res.innerHTML = '';
-
-  let addition = '';
-  for (let i = 0; i < num; i++) {
-    addition += '٤';
-    if (i < num - 1) addition += ' + ';
-  }
-
-  res.innerHTML = toArabic(num) + ' × ٤ = ' + toArabic(num * 4) + '<br>';
-  res.innerHTML += addition + ' = ' + toArabic(num * 4) + '<br>';
-
-  for (let i = 0; i < num; i++) {
-    const group = document.createElement('div');
-    group.style.display = 'inline-block';
-    for (let j = 0; j < 4; j++) {
-      const c = document.createElement('div');
-      c.className = 'circle';
-      c.style.background = '#ff4500';
-      c.style.margin = '5px';
-      group.appendChild(c);
-    }
-    res.appendChild(group);
-  }
-
-  const randomPraise = praises[Math.floor(Math.random() * praises.length)];
-  res.innerHTML += '<br>' + randomPraise;
-
-  playSound('correct');
-  createStar();
-  launchConfetti();
-
-  points += 12;
+/* فشل ❌ */
+function failedHit() {
+  playSound(200);
+  monsterHP += 10;
+  if (monsterHP > monsterMaxHP) monsterHP = monsterMaxHP;
+  updateHPBar();
+  score -= 5;
+  if (score < 0) score = 0;
   updateScore();
 }
 
-function solveStory(type) {
-const res = document.getElementById('storyResult');
-res.innerHTML = '';
-let text = '';
-let result = 0;
-let explanation = '';
-if (type === 1) {
-text = 'نوافذ الصف';
-result = 4 * 4;
-explanation = 'عدد النوافذ ٤<br>كل نافذة ٤ أجزاء<br>المجموع ٤ × ٤ = ' + toArabic(result);
-} else if (type === 2) {
-text = 'قصص التاجر';
-result = 4 * 4;
-explanation = 'عدد القصص ٤<br>سعر كل قصة ٤ دنانير<br>المبلغ ٤ × ٤ = ' + toArabic(result) + ' دينار';
-} else if (type === 3) {
-text = 'أذرع المراوح';
-result = 3 * 4;
-explanation = 'عدد المراوح ٣<br>كل مروحة ٤ أذرع<br>عدد الأذرع ٣ × ٤ = ' + toArabic(result);
-}
-res.innerHTML = '<strong>' + text + '</strong><br>' + explanation;
-for (let i = 0; i < 4; i++) {
-const c = document.createElement('div');
-c.className = 'circle';
-c.style.background = '#00bfff';
-c.style.margin = '10px';
-res.appendChild(c);
-}
-const randomPraise = praises[Math.floor(Math.random() * praises.length)];
-res.innerHTML += '<br><br>' + randomPraise;
-playSound('correct');
-createStar();
-launchConfetti();
-points += 15;
-updateScore();
+/* الفوز */
+function winLevel() {
+  playSound(800);
+  level++;
+  document.getElementById("level").innerHTML = toArabic(level);
+  updateMonster();
+  newQuestion();
 }
 
-function generateFinalQuestion() {
-const a = Math.floor(Math.random() * 5) + 1;
-correctFinal = a * 4;
-document.getElementById('finalQ').innerText = 'كم هو ' + toArabic(a) + ' × ٤ ؟';
-document.getElementById('finalAns').value = '';
-document.getElementById('finalFb').innerText = '';
+/* تحديث النقاط */
+function updateScore() {
+  document.getElementById("score").innerHTML = toArabic(score);
 }
-
-function checkFinal() {
-const ans = parseInt(document.getElementById('finalAns').value);
-if (ans === correctFinal) {
-const randomPraise = praises[Math.floor(Math.random() * praises.length)];
-document.getElementById('finalFb').innerHTML = randomPraise;
-playSound('correct');
-createStar();
-launchConfetti();
-points += 20;
-updateScore();
-finalCount++;
-if (finalCount >= 8) {
-document.getElementById('certificate').style.display = 'block';
-}
-generateFinalQuestion();
-} else {
-document.getElementById('finalFb').innerText = 'قريب حاول تاني';
-playSound('wrong');
-}
-}
-
-function printCertificate() {
-window.print();
-}
-
-window.onload = () => {
-updateScore();
-};
 </script>
+
 </body>
 </html>
