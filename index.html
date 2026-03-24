@@ -1,204 +1,184 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>🎮 لعبة صيد الرقم ٤</title>
-
+<title>مغامرة الضرب في أربعة</title>
 <style>
-body{
-  font-family: Arial, sans-serif;
-  background:#eef7fb;
-  text-align:center;
-}
-header{
-  background:#0b6fa4;
-  color:white;
-  padding:15px;
-}
-.game{
-  background:white;
-  width:90%;
-  max-width:520px;
-  margin:20px auto;
-  padding:20px;
-  border-radius:15px;
-}
-.items{
-  font-size:40px;
-  margin:15px;
-}
-button{
-  font-size:22px;
-  padding:10px 20px;
-  margin:5px;
-}
-#result{
-  font-size:24px;
-  margin-top:15px;
-}
-#score{
-  color:#ff9800;
-  font-size:20px;
-}
-.stage{
-  font-size:18px;
-  color:#555;
-  margin-bottom:10px;
-}
-canvas{
-  border:2px dashed #0b6fa4;
-  border-radius:10px;
-  touch-action:none;
-}
-.hidden{
-  display:none;
-}
+body {font-family: Arial; background: linear-gradient(#87ceeb, #e0ffff); margin: 0; padding: 20px; color: #000; text-align: center; font-size: 22px;}
+h1 {font-size: 50px;}
+h2 {font-size: 35px;}
+.door {background: #ffdd55; border: 5px solid #ff8000; border-radius: 20px; padding: 25px; margin: 15px; font-size: 28px; cursor: pointer; width: 300px;}
+.door:hover {transform: scale(1.1); background: #ffd700;}
+.level {display:none; background:white; border-radius:20px; padding:40px; margin:20px auto; max-width:900px;}
+.circle {width:60px; height:60px; background:red; border-radius:50%; display:inline-block; margin:10px; animation: fly 1.5s forwards;}
+@keyframes fly {0%{transform:translateY(0) scale(0.5);}50%{transform:translateY(-80px) scale(1.2);}100%{transform:translateY(-150px) scale(0.8); opacity:0;}}
+.star {font-size:55px; color:gold; animation:twinkle 0.8s infinite;}
+@keyframes twinkle {0%,100%{opacity:1;}50%{opacity:0.3;}}
+button {background:#32cd32; padding:20px 40px; border:none; border-radius:15px; font-size:26px; cursor:pointer;}
+button.selected {background:#90ee90 !important;}
+#progress {height:25px; background:#32cd32; width:0%; border-radius:10px;}
+.confetti {position:absolute; width:12px; height:12px; border-radius:50%; animation:confettiFall 3s linear forwards;}
+@keyframes confettiFall {0%{transform:translateY(-100px) rotate(0);}100%{transform:translateY(800px) rotate(720deg); opacity:0;}}
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>🎮 لعبة صيد الرقم ٤</h1>
-<h3>مدرسة عاطوف المختلطة</h3>
-<p>المعلم: محمد وجيه</p>
-</header>
+<h1>بسم الله الرحمن الرحيم</h1>
+<h2>مغامرة الضرب في أربعة</h2>
 
-<div class="game">
-<p class="stage" id="stage"></p>
-<p id="question"></p>
-<div id="items" class="items"></div>
+<div id="score">نقاطك: <span id="points">٠</span></div>
+<div style="width:80%; margin:15px auto; background:#ddd; border-radius:10px;"><div id="progress"></div></div>
 
-<div id="choices"></div>
-
-<div id="writeStage" class="hidden">
-  <p>✍️ اكتب الرقم ٤ بإصبعك</p>
-  <canvas id="board" width="260" height="260"></canvas><br>
-  <button onclick="clearCanvas()">↺ مسح</button>
-  <button onclick="finishWriting()">✅ أنهيت</button>
+<div id="doors">
+<button class="door" onclick="startAdventure(1)">مغامرة الدوائر السحرية</button>
+<button class="door" onclick="startAdventure(2)">قصر جدول الأربعة</button>
+<button class="door" onclick="startAdventure(3)">جسر الضرب والجمع</button>
+<button class="door" onclick="startAdventure(4)">الكنز النهائي</button>
 </div>
 
-<p id="result"></p>
-<p id="score">⭐ النقاط: ٠</p>
+<!-- المستوى الأول -->
+<div id="adv1" class="level">
+<h3>أضف مجموعات وشاهد السحر يحدث</h3>
+<button onclick="addGroup()">أضف مجموعة</button>
+<button onclick="clearGroups()">إعادة</button>
+<div id="visual1"></div>
+<p id="eq1" style="font-size:28px;"></p>
+</div>
 
-<button id="nextBtn" class="hidden" onclick="next()">التالي ▶</button>
+<!-- المستوى الثاني -->
+<div id="adv2" class="level">
+<h3>قصر جدول الأربعة</h3>
+<table border="1" style="margin:auto; font-size:28px; border-collapse:collapse; width:60%;">
+<tr><td><button onclick="selectRow(1)" id="row1">١ × ٤ = ؟</button></td></tr>
+<tr><td><button onclick="selectRow(2)" id="row2">٢ × ٤ = ؟</button></td></tr>
+<tr><td><button onclick="selectRow(3)" id="row3">٣ × ٤ = ؟</button></td></tr>
+<tr><td><button onclick="selectRow(4)" id="row4">٤ × ٤ = ؟</button></td></tr>
+<tr><td><button onclick="selectRow(5)" id="row5">٥ × ٤ = ؟</button></td></tr>
+</table>
+<button onclick="showSelectedMagic()" style="background:#ffd700;">شاهد السحر</button>
+<div id="magic" style="min-height:200px; margin-top:30px;"></div>
+</div>
+
+<!-- المستوى الثالث -->
+<div id="adv3" class="level">
+<h3>جسر الضرب والجمع</h3>
+<div id="linkResult" style="font-size:26px; min-height:200px;"></div>
+<table border="1" style="margin:auto; font-size:28px; width:70%; border-collapse:collapse;">
+<tr><td><button onclick="showLink(1)">١ × ٤ = ؟</button></td></tr>
+<tr><td><button onclick="showLink(2)">٢ × ٤ = ؟</button></td></tr>
+<tr><td><button onclick="showLink(3)">٣ × ٤ = ؟</button></td></tr>
+<tr><td><button onclick="showLink(4)">٤ × ٤ = ؟</button></td></tr>
+<tr><td><button onclick="showLink(5)">٥ × ٤ = ؟</button></td></tr>
+</table>
+</div>
+
+<!-- المستوى الرابع -->
+<div id="adv4" class="level">
+<h3>الكنز النهائي</h3>
+<p id="finalQ" style="font-size:28px;"></p>
+<input id="finalAns" type="number" style="font-size:26px;">
+<button onclick="checkFinal()">تحقق</button>
+<p id="finalFb" style="font-size:26px;"></p>
 </div>
 
 <script>
-/* 🔢 تحويل الأرقام إلى عربية شرقية */
-function toArabicNumber(num){
-  const a = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-  return num.toString().split('').map(d => a[d]).join('');
+let points = 0;
+let groups = 0;
+let selectedRow = 0;
+let correctFinal = 0;
+
+function toArabic(n){ return n.toString().replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]); }
+
+function updateScore(){
+document.getElementById('points').innerText = toArabic(points);
+document.getElementById('progress').style.width = Math.min(100, points/2) + '%';
 }
 
-/* مراحل الدرس (مراعية للأعداد السابقة) */
-const stages=[
- {t:"المرحلة "+toArabicNumber(1)+" / "+toArabicNumber(5)+" – مراجعة",
-  q:"كم عدد التفاحات؟", i:"🍎🍎🍎", o:[1,2,3], a:3},
-
- {t:"المرحلة "+toArabicNumber(2)+" / "+toArabicNumber(5)+" – عدّ",
-  q:"كم عدد الكرات؟", i:"⚽⚽⚽⚽", o:[3,4,5], a:4},
-
- {t:"المرحلة "+toArabicNumber(3)+" / "+toArabicNumber(5)+" – ميّز العدد",
-  q:"اضغط على العدد ٤", i:"٤️⃣", o:[2,4,3], a:4},
-
- {t:"المرحلة "+toArabicNumber(4)+" / "+toArabicNumber(5)+" – ربط العدد بالكمية",
-  q:"كم عدد العصافير؟", i:"🐦🐦🐦🐦", o:[3,4,5], a:4},
-
- {t:"المرحلة "+toArabicNumber(5)+" / "+toArabicNumber(5)+" – كتابة العدد ٤"}
-];
-
-const praise=["🌟 أحسنت","👏 ممتاز","🎉 رائع","✅ بطل"];
-let n=0, score=0;
-
-function load(){
- const s=stages[n];
- document.getElementById("stage").innerText=s.t;
- document.getElementById("result").innerText="";
- document.getElementById("nextBtn").classList.add("hidden");
- document.getElementById("writeStage").classList.add("hidden");
- document.getElementById("choices").innerHTML="";
-
- if(s.q){
-  document.getElementById("question").innerText=s.q;
-  document.getElementById("items").innerText=s.i;
-
-  s.o.forEach(o=>{
-    const b=document.createElement("button");
-    b.innerText=toArabicNumber(o);   // ✅ عرض عربي
-    b.onclick=()=>answer(o);         // ✅ منطق رقمي
-    document.getElementById("choices").appendChild(b);
-  });
- }else{
-  document.getElementById("question").innerText="";
-  document.getElementById("items").innerText="٤";
-  document.getElementById("writeStage").classList.remove("hidden");
- }
+function playSound(type){
+const ctx=new(window.AudioContext||window.webkitAudioContext)();
+const o=ctx.createOscillator(); const g=ctx.createGain();
+o.connect(g); g.connect(ctx.destination);
+o.frequency.value=(type==='correct'?800:300);
+g.gain.value=0.7; o.start(); setTimeout(()=>o.stop(),300);
 }
 
-function answer(x){
- if(x===stages[n].a){
-  document.getElementById("result").innerText =
-    praise[Math.floor(Math.random()*praise.length)];
-  score++;
-  document.getElementById("score").innerText =
-    "⭐ النقاط: "+toArabicNumber(score);
-  document.getElementById("nextBtn").classList.remove("hidden");
- }else{
-  document.getElementById("result").innerText="❌ حاول مرة أخرى";
- }
+function createStar(){const s=document.createElement('div'); s.className='star'; s.innerText='★'; document.body.appendChild(s); setTimeout(()=>s.remove(),2500);}
+
+function launchConfetti(){for(let i=0;i<40;i++){const c=document.createElement('div'); c.className='confetti'; c.style.left=Math.random()*100+'vw'; c.style.background=['#ff0000','#00ff00','#0000ff','#ffff00'][Math.floor(Math.random()*4)]; document.body.appendChild(c); setTimeout(()=>c.remove(),3000);}}
+
+function startAdventure(n){
+document.querySelectorAll('.level').forEach(l=>l.style.display='none');
+document.getElementById('adv'+n).style.display='block';
+if(n===4) generateFinalQuestion();
 }
 
-function next(){
- n++;
- if(n<stages.length){
-  load();
- }else{
-  document.getElementById("question").innerText="🎊 أحسنت! أنهيت درس العدد ٤";
-  document.getElementById("items").innerText="";
-  document.getElementById("choices").innerHTML="";
-  document.getElementById("nextBtn").classList.add("hidden");
- }
+function addGroup(){
+groups++;
+const v=document.getElementById('visual1');
+v.innerHTML='';
+for(let i=0;i<groups;i++){
+const g=document.createElement('div');
+for(let j=0;j<4;j++){const c=document.createElement('div'); c.className='circle'; g.appendChild(c);}
+v.appendChild(g);
+}
+document.getElementById('eq1').innerHTML = toArabic(groups)+' × ٤ = '+toArabic(groups*4);
+points+=8;
+updateScore();
+playSound('correct'); createStar(); launchConfetti();
 }
 
-load();
+function clearGroups(){groups=0; document.getElementById('visual1').innerHTML=''; document.getElementById('eq1').innerText='';}
 
-/* ✍️ الرسم بالإصبع */
-const canvas=document.getElementById("board");
-const ctx=canvas.getContext("2d");
-ctx.lineWidth=6;
-ctx.lineCap="round";
-let drawing=false;
+function selectRow(n){
+selectedRow=n;
+document.getElementById('magic').innerHTML='اخترت '+toArabic(n)+' × ٤ ... اضغط السحر';
+}
 
-function pos(e){
- const r=canvas.getBoundingClientRect();
- return {
-  x:(e.touches?e.touches[0].clientX:e.clientX)-r.left,
-  y:(e.touches?e.touches[0].clientY:e.clientY)-r.top
- };
-}
-canvas.onmousedown=canvas.ontouchstart=e=>{
- drawing=true;
- const p=pos(e);
- ctx.beginPath();
- ctx.moveTo(p.x,p.y);
-};
-canvas.onmousemove=canvas.ontouchmove=e=>{
- if(!drawing)return;
- const p=pos(e);
- ctx.lineTo(p.x,p.y);
- ctx.stroke();
-};
-canvas.onmouseup=canvas.ontouchend=()=>drawing=false;
+function showSelectedMagic(){
+if(selectedRow===0){document.getElementById('magic').innerHTML='اختر سطراً أولاً'; return;}
+let r=selectedRow*4;
+const m=document.getElementById('magic');
+m.innerHTML='انظر! '+toArabic(selectedRow)+' × ٤ = '+toArabic(r)+'<br>';
 
-function clearCanvas(){
- ctx.clearRect(0,0,canvas.width,canvas.height);
+for(let i=0;i<4;i++){const c=document.createElement('div'); c.className='circle'; c.style.background=['#ff4500','#ffd700','#00ff7f','#00bfff'][i]; m.appendChild(c);}
+
+points+=10; updateScore(); playSound('correct'); createStar(); launchConfetti();
+document.getElementById('row'+selectedRow).innerText = toArabic(selectedRow)+' × ٤ = '+toArabic(r);
 }
-function finishWriting(){
- document.getElementById("result").innerText="✅ أحسنت! كتبت الرقم ٤";
+
+function showLink(n){
+let res=document.getElementById('linkResult');
+let sum = ('٤ + '.repeat(n)).slice(0,-3);
+res.innerHTML = toArabic(n)+' × ٤ = '+toArabic(n*4)+'<br>'+sum+' = '+toArabic(n*4)+'<br>';
+
+for(let i=0;i<n;i++){
+const g=document.createElement('div'); g.style.display='inline-block';
+for(let j=0;j<4;j++){const c=document.createElement('div'); c.className='circle'; g.appendChild(c);}
+res.appendChild(g);
 }
+points+=12; updateScore(); playSound('correct'); createStar(); launchConfetti();
+}
+
+function generateFinalQuestion(){
+let a=Math.floor(Math.random()*5)+1;
+correctFinal = a*4;
+document.getElementById('finalQ').innerText='كم هو '+toArabic(a)+' × ٤ ؟';
+document.getElementById('finalAns').value='';
+document.getElementById('finalFb').innerText='';
+}
+
+function checkFinal(){
+let ans=parseInt(document.getElementById('finalAns').value);
+if(ans===correctFinal){
+document.getElementById('finalFb').innerText='أحسنت يا بطل!';
+points+=20; updateScore(); playSound('correct'); createStar(); launchConfetti();
+generateFinalQuestion();
+} else {
+document.getElementById('finalFb').innerText='حاول مرة أخرى';
+}
+}
+updateScore();
 </script>
-
 </body>
 </html>
